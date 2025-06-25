@@ -1,21 +1,21 @@
 // api/index.js
 const express = require('express');
+const cors = require('cors'); // 之前已提到
+const dotenv = require('dotenv'); // 导入 dotenv
+
+// 只有在非生产环境下才从 .env 文件加载环境变量
+// Vercel 在部署时会自动注入环境变量，不需要 .env 文件
+if (process.env.NODE_ENV !== 'production') {
+  dotenv.config();
+}
 
 const app = express();
 
-// 解析 JSON 请求体
 app.use(express.json());
-
-// CORS 允许所有来源（开发时方便，生产环境需限制）
-const cors = require('cors'); // 这里用到了 cors，所以等下要安装它
 app.use(cors());
 
-// 定义一个简单的 GET 路由作为测试
 app.get('/api/hello', (req, res) => {
   res.status(200).json({ message: 'Hello from your backend API!' });
 });
 
-// 这里将是你的音乐信息分析接口路由
-
-// Vercel Serverless Function 的默认导出
 module.exports = app;
