@@ -1,7 +1,7 @@
 // services/urlContentService.js
 // 你需要安装 jsdom 和 @mozilla/readability：npm install jsdom @mozilla/readability
-const { JSDOM } = require('jsdom');
-const { Readability } = require('@mozilla/readability');
+import { JSDOM } from 'jsdom';
+import { Readability } from '@mozilla/readability';
 
 /**
  * 从给定的 URL 获取页面内容并提取文本。
@@ -39,4 +39,4 @@ async function fetchUrlContent(url) {
   }
 }
 
-module.exports = { fetchUrlContent };
+export { fetchUrlContent };
