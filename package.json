@@ -23,7 +23,10 @@
     "axios": "^1.11.0",
     "cheerio": "^1.1.2",
     "dotenv": "^17.2.1",
-    "express": "^5.1.0",
+  "@supabase/supabase-js": "^2.56.0",
+  "express": "^5.1.0",
+  "cors": "^2.8.5",
+  "express-rate-limit": "^6.7.0",
     "spotify-web-api-node": "^5.0.2"
   },
   "devDependencies": {

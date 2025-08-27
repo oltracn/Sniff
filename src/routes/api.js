@@ -2,6 +2,7 @@ import express from 'express';
 import { fetchUrlContent, extractMainText } from '../services/fetcher.js';
 import { analyzeMusicInfo } from '../services/ai.js';
 import { searchSpotifyTrack } from '../services/spotify.js';
+import guestRouter from './guest.js';
 
 const router = express.Router();
 
@@ -64,3 +65,6 @@ router.post('/parse-music', async (req, res) => {
 });
 
 export default router;
+
+// mount guest routes
+router.use('/guest', guestRouter);
