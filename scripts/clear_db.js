@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Clear fetch_events and music_items tables using the server-side supabase client.
+// Clear sniffs and musics tables using the server-side supabase client.
 // WARNING: this permanently deletes data. Require --confirm to actually run.
 // Usage (PowerShell):
 // From project root: node Sniff/scripts/clear_db.js --confirm
@@ -22,28 +22,28 @@ async function main() {
 
   const ok = process.argv.includes('--confirm') || process.argv.includes('-y');
   if (!ok) {
-    console.log('This script will DELETE ALL rows in public.music_items and public.fetch_events.');
+    console.log('This script will DELETE ALL rows in public.musics and public.sniffs.');
     console.log('Run with --confirm to proceed: node Sniff/scripts/clear_db.js --confirm');
     process.exit(0);
   }
 
   try {
     // Test connection
-    const { error: testErr } = await supabaseAdmin.from('music_items').select('*').limit(0);
+    const { error: testErr } = await supabaseAdmin.from('musics').select('*').limit(0);
     if (testErr) {
       console.error('Connection test failed:', testErr);
       throw testErr;
     }
     console.log('Connection OK, table exists.');
 
-    // Delete music_items first because it references fetch_events
-    const { data: deletedItems, error: delItemsErr } = await supabaseAdmin.from('music_items').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+    // Delete musics first because it references sniffs
+    const { data: deletedItems, error: delItemsErr } = await supabaseAdmin.from('musics').delete().neq('id', '00000000-0000-0000-0000-000000000000');
     if (delItemsErr) throw delItemsErr;
-    console.log(`Deleted ${Array.isArray(deletedItems) ? deletedItems.length : 0} rows from music_items.`);
+    console.log(`Deleted ${Array.isArray(deletedItems) ? deletedItems.length : 0} rows from musics.`);
 
-    const { data: deletedEvents, error: delEventsErr } = await supabaseAdmin.from('fetch_events').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+    const { data: deletedEvents, error: delEventsErr } = await supabaseAdmin.from('sniffs').delete().neq('id', '00000000-0000-0000-0000-000000000000');
     if (delEventsErr) throw delEventsErr;
-    console.log(`Deleted ${Array.isArray(deletedEvents) ? deletedEvents.length : 0} rows from fetch_events.`);
+    console.log(`Deleted ${Array.isArray(deletedEvents) ? deletedEvents.length : 0} rows from sniffs.`);
 
     console.log('Database cleared successfully.');
   } catch (err) {
