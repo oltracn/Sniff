@@ -5,15 +5,17 @@ function isValidGuestId(id) {
 }
 
 export async function fetchHandler(req, res) {
-  const userId = req.userId || null; // auth middleware may attach
-  const { guestId, event = {}, items = [] } = req.body ?? {};
+  // 支持前端直接传 actor，也支持认证中间件补充
+  const { actor, event = {}, items = [] } = req.body ?? {};
   const safeItems = Array.isArray(items) ? items : [];
 
-  if (!userId && !isValidGuestId(guestId)) return res.status(400).json({ error: 'invalid_guestId' });
+  // 校验 actor
+  if (!actor || !actor.type || !actor.id || (actor.type === 'guest' && !isValidGuestId(actor.id))) {
+    return res.status(400).json({ error: 'invalid_actor' });
+  }
   if (safeItems.length === 0) return res.status(400).json({ error: 'no_items' });
 
   try {
-    const actor = userId ? { type: 'user', id: userId } : { type: 'guest', id: guestId };
     const result = await sniffService.createSniff({ actor, event, items: safeItems });
     return res.json({ event: result.event, items: result.items });
   } catch (err) {

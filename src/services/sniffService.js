@@ -101,16 +101,23 @@ export async function getSniffById(id) {
 }
 
 // listSniffs: 查询多条 sniff 记录
-export async function listSniffs({ page = 1, pageSize = 20, filters = {} }) {
+// 支持 actor 方案，统一身份过滤
+export async function listSniffs({ page = 1, pageSize = 20, actor = null, filters = {} }) {
   const offset = (page - 1) * pageSize;
   let query = supabaseAdmin
     .from('sniffs')
     .select('*, urls(url, title), musics(*)')
     .range(offset, offset + pageSize - 1);
 
-  // 应用过滤器
-  if (filters.userId) query = query.eq('user_id', filters.userId);
-  if (filters.guestId) query = query.eq('guest_id', filters.guestId);
+  // 优先用 actor 过滤
+  if (actor && actor.type && actor.id) {
+    if (actor.type === 'user') query = query.eq('user_id', actor.id);
+    if (actor.type === 'guest') query = query.eq('guest_id', actor.id);
+  } else {
+    // 兼容旧 filters
+    if (filters.userId) query = query.eq('user_id', filters.userId);
+    if (filters.guestId) query = query.eq('guest_id', filters.guestId);
+  }
 
   const { data, error } = await query;
   if (error) throw error;
