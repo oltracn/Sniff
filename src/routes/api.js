@@ -5,6 +5,7 @@ import sniffRouter from './sniff.js';
 import musicRouter from './music.js';
 import userRouter from './user.js';
 import guestRouter from './guest.js';
+import authRouter from './auth.js';
 
 const router = express.Router();
 
@@ -22,5 +23,8 @@ router.use('/users', userRouter);
 
 // 挂载 guest 路由
 router.use('/guests', guestRouter);
+
+// 授权 / 登录 路由 (模式2: 后端全权兑换 + 深链)
+router.use('/auth', authRouter);
 
 export default router;

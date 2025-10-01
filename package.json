@@ -27,7 +27,9 @@
   "express": "^5.1.0",
   "cors": "^2.8.5",
   "express-rate-limit": "^6.7.0",
-    "spotify-web-api-node": "^5.0.2"
+    "spotify-web-api-node": "^5.0.2",
+    "jsonwebtoken": "^9.0.2"
+    ,"jose": "^5.9.3"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
